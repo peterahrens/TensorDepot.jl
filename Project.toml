@@ -4,14 +4,17 @@ authors = ["Willow Ahrens"]
 version = "0.1.0"
 
 [deps]
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 MatrixDepot = "b51810bb-c9f3-55da-ae3c-350fc1fbce05"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Scratch = "6c6a2e73-6563-6170-7368-637461726353"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
 
 [compat]
-StatsBase = "0.33"
 MatrixDepot = "1"
+StatsBase = "0.33"
 julia = "1.7"
 
 [extras]
