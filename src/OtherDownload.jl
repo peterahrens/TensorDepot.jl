@@ -8,7 +8,6 @@
 # using HTTP
 using ZipFile
 using Images
-using ImageView
 
 function unzip(file,exdir="",flatten=false)
     fileFullPath = isabspath(file) ?  file : joinpath(pwd(),file)
