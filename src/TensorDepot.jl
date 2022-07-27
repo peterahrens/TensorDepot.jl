@@ -13,7 +13,7 @@ download_cache = ""
 include("MLRDownload.jl")
 include("OtherDownload.jl")
 
-export sketches, mnist
+export sketches, mnist, fashionmnist
 
 """
 random sparse Stochastic Kronecker tensor
@@ -74,6 +74,7 @@ function __init__()
     include_generator(Group, :random, stockronrand)
     include_generator(FunctionName, "humansketches", humansketches)
     include_generator(FunctionName, "mnist", mnist)
+    include_generator(FunctionName, "fashionmnist", fashionmnist)
     publish_user_generators()
 
     if haskey(ENV, "TENSORDEPOT_DATA")
