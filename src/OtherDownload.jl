@@ -8,6 +8,7 @@
 # using HTTP
 using ZipFile
 using Images
+using MLDatasets
 
 function unzip(file,exdir="",flatten=false)
     fileFullPath = isabspath(file) ?  file : joinpath(pwd(),file)
@@ -77,4 +78,26 @@ function humansketches(idxs = 1:20_000)
         out[n, :, :] = load(joinpath(path, "$i.png"))
     end
     return out
+end
+
+"""
+mnist dataset tensor
+========================
+mnist([idxs])
+Return a 3-tensor A[image number, vertical pixel position, horizontal pixel
+position], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the training images from mnist. `idxs` is an
+optional list specifying which sketch images to load. The images number from
+1:60_000.
+"""
+function mnist(idxs = 1:60_000)
+    @boundscheck begin
+        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError(mnist, idxs))
+    end
+    mnist_path = joinpath(download_cache, "mnist")
+    if !isfile(joinpath(mnist_path, "train-images-idx3-ubyte.gz"))
+        MNIST.download(mnist_path; i_accept_the_terms_of_use=true)
+    end
+    train_x, train_y = MNIST.traindata(dir=mnist_path)
+    return permutedims(train_x[:,:,idxs], [3,1,2])
 end
