@@ -72,10 +72,11 @@ end
 function __init__()
     include_generator(FunctionName, "stockronrand", stockronrand)
     include_generator(Group, :random, stockronrand)
+    include_generator(FunctionName, "humansketches", humansketches)
     publish_user_generators()
 
-    if haskey(ENV, "TENSORDEPOT_LOCATION")
-        global download_cache = ENV["TENSORDEPOT_LOCATION"]
+    if haskey(ENV, "TENSORDEPOT_DATA")
+        global download_cache = ENV["TENSORDEPOT_DATA"]
     else 
         global download_cache = get_scratch!(@__MODULE__, "tensors")
     end
