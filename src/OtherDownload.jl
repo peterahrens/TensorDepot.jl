@@ -44,7 +44,7 @@ function download_dataset(url, name)
     end
 end
 
-function download_sketches()
+function download_humansketches()
     sketches_link = "https://cybertron.cg.tu-berlin.de/eitz/projects/classifysketch/sketches_png.zip"
     loc, unpack = download_dataset(sketches_link, "sketches")
     unzip_path = joinpath(dirname(loc), "pngs")
@@ -54,18 +54,27 @@ function download_sketches()
     return unzip_path
 end
 
-function sketches(start=1, stop=20000)
-    if start < 1 || start > 20000 || stop < 1 || stop > 20000 || stop < start
-        error("Sketch argument error: start=$start, stop=$stop")
+"""
+humansketches dataset tensor
+========================
+humansketches([idxs])
+
+Return a 3-tensor A[sketch number, vertical pixel position, horizontal pixel
+position], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. `idxs` is an optional list specifying which sketch images to
+load. The sketches number from 1:20_000.
+"""
+function humansketches(idxs = 1:20_000)
+    @boundscheck begin
+        extrema(idxs) ⊆ 1:20_000 || throw(BoundsError(sketches, idxs))
     end
 
-    path = download_sketches()
+    path = download_humansketches()
 
-    out = Array{Gray{N0f8}, 3}(undef, stop-start+1, 1111,1111)
+    out = Array{Gray{N0f8}, 3}(undef, length(idxs), 1111,1111)
 
-    for i in start:stop
-        arr_idx = i - start + 1
-        out[arr_idx, :, :] = load(joinpath(path, "$i.png"))
+    for (n, i) in enumerate(idxs)
+        out[n, :, :] = load(joinpath(path, "$i.png"))
     end
     return out
 end
