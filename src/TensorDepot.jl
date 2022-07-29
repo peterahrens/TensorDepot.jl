@@ -7,6 +7,14 @@ using LinearAlgebra
 using MatrixDepot
 using MatrixDepot: include_generator, FunctionName, Group, publish_user_generators
 
+using Scratch
+download_cache = ""
+
+include("MLRDownload.jl")
+include("OtherDownload.jl")
+
+export sketches, mnist, fashionmnist
+
 """
 random sparse Stochastic Kronecker tensor
 ========================
@@ -64,7 +72,16 @@ end
 function __init__()
     include_generator(FunctionName, "stockronrand", stockronrand)
     include_generator(Group, :random, stockronrand)
+    include_generator(FunctionName, "humansketches", humansketches)
+    include_generator(FunctionName, "mnist", mnist)
+    include_generator(FunctionName, "fashionmnist", fashionmnist)
     publish_user_generators()
+
+    if haskey(ENV, "TENSORDEPOT_DATA")
+        global download_cache = ENV["TENSORDEPOT_DATA"]
+    else 
+        global download_cache = get_scratch!(@__MODULE__, "tensors")
+    end
 end
 
 end
