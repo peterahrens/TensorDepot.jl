@@ -2,13 +2,17 @@
 
 # sketches: https://cybertron.cg.tu-berlin.de/eitz/projects/classifysketch/sketches_png.zip
 # hwd+ (drive folder): https://drive.google.com/drive/folders/1f2o1kjXLvcxRgtmMMuDkA2PQ5Zato4Or 
-# hwd+ (500x500 npy): https://drive.google.com/file/d/1CInd1YOC0lsEq4_q089SVb7PkhxtrwyE/view?usp=sharing
+# hwd+ (500x500 npy): https://drive.google.com/u/0/uc?id=1CInd1YOC0lsEq4_q089SVb7PkhxtrwyE&export=download
 # ilsvrc (kaggle login needed, and its huge!): https://www.kaggle.com/competitions/imagenet-object-localization-challenge/
 
 # using HTTP
 using ZipFile
 using Images
 using MLDatasets
+using Downloads
+using DelimitedFiles
+using GZip
+using CSV, DataFrames
 
 function unzip(file,exdir="",flatten=false)
     fileFullPath = isabspath(file) ?  file : joinpath(pwd(),file)
@@ -38,7 +42,7 @@ function download_dataset(url, name)
     fname = joinpath(path, basename(url))
     if !isfile(fname)
         mkpath(path)
-        download(url, fname)
+        Downloads.download(url, fname)
         return fname, true
     else
         return fname, false
@@ -67,7 +71,7 @@ load. The sketches number from 1:20_000.
 """
 function humansketches(idxs = 1:20_000)
     @boundscheck begin
-        extrema(idxs) ⊆ 1:20_000 || throw(BoundsError(sketches, idxs))
+        extrema(idxs) ⊆ 1:20_000 || throw(BoundsError("humansketches", idxs))
     end
 
     path = download_humansketches()
@@ -92,7 +96,7 @@ optional list specifying which sketch images to load. The images number from
 """
 function mnist(idxs = 1:60_000)
     @boundscheck begin
-        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError(mnist, idxs))
+        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("mnist", idxs))
     end
     mnist_path = joinpath(download_cache, "mnist")
     if !isfile(joinpath(mnist_path, "train-images-idx3-ubyte.gz"))
@@ -115,7 +119,7 @@ an optional list specifying which sketch images to load. The images number from
 """
 function fashionmnist(idxs = 1:60_000)
     @boundscheck begin
-        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError(mnist, idxs))
+        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("fashionmnist", idxs))
     end
     mnist_path = joinpath(download_cache, "fashion_mnist")
     if !isfile(joinpath(mnist_path, "train-images-idx3-ubyte.gz"))
@@ -126,3 +130,136 @@ function fashionmnist(idxs = 1:60_000)
     return permutedims(train_x[:,:,idxs], [3,1,2])
 end
 
+"""
+census dataset matrix
+========================
+census()
+Return a 2458285×69 matrix of Int32 values from the 1990 US census dataset:
+https://archive-beta.ics.uci.edu/ml/datasets/us+census+data+1990.
+"""
+function census()
+    link = "https://archive.ics.uci.edu/ml/machine-learning-databases/census1990-mld/USCensus1990.data.txt"
+    loc, unpack = download_dataset(link, "census")
+    data = readdlm(loc, ',', Int32; skipstart=1)
+    return data
+end
+
+"""
+covtype dataset matrix
+========================
+covtype()
+Return a 581011×55 matrix of Int16 values from the covertype dataset:
+https://archive-beta.ics.uci.edu/ml/datasets/covertype.
+"""
+function covtype()
+    link = "https://archive.ics.uci.edu/ml/machine-learning-databases/covtype/covtype.data.gz"
+    loc, unpack = download_dataset(link, "covtype")
+    data = GZip.open(loc, "r") do io
+        readdlm(io, ',', Int16)
+    end
+end
+
+"""
+kddcup dataset matrix
+========================
+kddcup()
+Return a 4898431×42 matrix of Float32 values from the kdd cup 1999 dataset:
+https://archive-beta.ics.uci.edu/ml/datasets/kdd+cup+1999+data.
+"""
+function kddcup()
+    link = "https://archive.ics.uci.edu/ml/machine-learning-databases/kddcup99-mld/kddcup.data.gz"
+    loc, unpack = download_dataset(link, "kddcup")
+    path = joinpath(download_cache, "kddcup")
+    fname = joinpath(path, "kddcup_processed.csv")
+
+    if unpack
+        data = CSV.read(loc, DataFrame; header=false)
+    
+        for j in [2,3,4,42]
+            col = data[:, j]
+            unique_elems = unique(col)
+            map_el = Dict{String, Int}
+            for (i,elem) in enumerate(unique_elems)
+                map_el = merge!(map_el,Dict(elem=>i))
+            end
+    
+            f = x -> map_el[x]
+            transform!(data, j => (x -> f.(x)))
+        end
+        select!(data, Not(:42))
+        select!(data, Not(:4))
+        select!(data, Not(:3))
+        select!(data, Not(:2))
+
+        data = Matrix(Float32.(data))
+        writedlm(fname, data, ',')    
+        return data
+    end
+
+    return Matrix(CSV.read(fname, DataFrame; types=Float32, header=false))
+end
+
+"""
+poker dataset matrix
+========================
+poker()
+Return a 25010×11 matrix of Int32 values from a dataset of poker hands:
+https://archive-beta.ics.uci.edu/ml/datasets/poker+hand.
+"""
+function poker()
+    link = "https://archive.ics.uci.edu/ml/machine-learning-databases/poker/poker-hand-training-true.data"
+    loc, unpack = download_dataset(link, "poker")
+    data = readdlm(loc, ',', Int8)
+    return data
+end
+
+"""
+power dataset matrix
+========================
+power()
+Return a 2049280×13 matrix of Float32 values from a dataset of power consumption:
+https://archive-beta.ics.uci.edu/ml/datasets/individual+household+electric+power+consumption.
+"""
+function power()
+    link = "https://archive.ics.uci.edu/ml/machine-learning-databases/00235/household_power_consumption.zip"
+    loc, unpack = download_dataset(link, "power")
+    unzip_path = dirname(loc)
+    if unpack
+        unzip(loc, unzip_path, true)
+    end
+
+    fname = joinpath(unzip_path, "household_power_consumption.txt")
+
+    data = CSV.read(fname, DataFrame; missingstring=["?", ""], types=Dict(1 => String, 2=> String))
+
+    data = subset(data, All() .=> ByRow(!ismissing))
+
+    tmp1 = split.(data.Date, "/")
+    insertcols!(data, [n => parse.(Float32, getindex.(tmp1, i)) for (i, n) in enumerate([:day, :month, :year])]...)
+    select!(data, Not(:Date))
+    tmp2 = split.(data.Time, ":")
+    insertcols!(data, [n => parse.(Float32, getindex.(tmp2, i)) for (i, n) in enumerate([:hour, :min, :sec])]...)
+    select!(data, Not(:Time))
+
+    return Matrix(Float32.(data))
+end
+
+"""
+spgemm dataset matrix
+========================
+spgemm()
+Return a 241600×18 matrix of Float32 values from a dataset of GPU SPGEMM kernel performance:
+https://archive-beta.ics.uci.edu/ml/datasets/sgemm+gpu+kernel+performance.
+"""
+function spgemm()
+    link = "https://archive.ics.uci.edu/ml/machine-learning-databases/00440/sgemm_product_dataset.zip"
+    loc, unpack = download_dataset(link, "spgemm")
+    unzip_path = dirname(loc)
+    if unpack
+        unzip(loc, unzip_path, true)
+    end
+
+    fname = joinpath(unzip_path, "sgemm_product.csv")
+    data = readdlm(fname, ',', Float32; skipstart=1)
+    return data
+end
