@@ -10,10 +10,9 @@ using MatrixDepot: include_generator, FunctionName, Group, publish_user_generato
 using Scratch
 download_cache = ""
 
-include("MLRDownload.jl")
 include("OtherDownload.jl")
 
-export sketches, mnist, fashionmnist
+export humansketches, mnist, fashionmnist, census, covtype, kddcup, poker, power, spgemm
 
 """
 random sparse Stochastic Kronecker tensor
@@ -75,6 +74,12 @@ function __init__()
     include_generator(FunctionName, "humansketches", humansketches)
     include_generator(FunctionName, "mnist", mnist)
     include_generator(FunctionName, "fashionmnist", fashionmnist)
+    include_generator(FunctionName, "census", census)
+    include_generator(FunctionName, "covtype", covtype)
+    include_generator(FunctionName, "kddcup", kddcup)
+    include_generator(FunctionName, "poker", poker)
+    include_generator(FunctionName, "power", power)
+    include_generator(FunctionName, "spgemm", spgemm)
     publish_user_generators()
 
     if haskey(ENV, "TENSORDEPOT_DATA")
