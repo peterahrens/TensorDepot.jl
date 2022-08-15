@@ -99,7 +99,7 @@ function mnist(idxs = 1:60_000)
         extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("mnist", idxs))
     end
     mnist_path = joinpath(download_cache, "mnist")
-    train_x = MNIST(:train, dir=mnist_path).features
+    train_x = MNIST(:train, dir=mnist_path, Tx=UInt8).features
     return permutedims(train_x[:,:,idxs], [3,1,2])
 end
 
@@ -118,7 +118,7 @@ function fashionmnist(idxs = 1:60_000)
         extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("fashionmnist", idxs))
     end
     mnist_path = joinpath(download_cache, "fashion_mnist")
-    train_x = FashionMNIST(:train, dir=mnist_path).features
+    train_x = FashionMNIST(:train, dir=mnist_path, Tx=UInt8).features
     return permutedims(train_x[:,:,idxs], [3,1,2])
 end
 
