@@ -104,6 +104,25 @@ function mnist(idxs = 1:60_000)
 end
 
 """
+emnist dataset tensor
+========================
+emnist([idxs])
+Return a 3-tensor A[image number, vertical pixel position, horizontal pixel
+position], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the training images from mnist. `idxs` is an
+optional list specifying which sketch images to load. The images number from
+1:60_000.
+"""
+function emnist(idxs = 1:60_000)
+    @boundscheck begin
+        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("emnist", idxs))
+    end
+    mnist_path = joinpath(download_cache, "emnist")
+    train_x = EMNIST(:train, dir=mnist_path, Tx=UInt8).features
+    return permutedims(train_x[:,:,idxs], [3,1,2])
+end
+
+"""
 fashion mnist dataset tensor
 ========================
 fashionmnist([idxs])
