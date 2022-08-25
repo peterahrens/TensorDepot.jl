@@ -12,8 +12,6 @@ download_cache = ""
 
 include("OtherDownload.jl")
 
-export humansketches, mnist, fashionmnist, census, covtype, kddcup, poker, power, spgemm
-
 """
 random sparse Stochastic Kronecker tensor
 ========================
@@ -71,9 +69,16 @@ end
 function __init__()
     include_generator(FunctionName, "stockronrand", stockronrand)
     include_generator(Group, :random, stockronrand)
-    include_generator(FunctionName, "humansketches", humansketches)
-    include_generator(FunctionName, "mnist", mnist)
-    include_generator(FunctionName, "fashionmnist", fashionmnist)
+    include_generator(FunctionName, "humansketches_test", humansketches_test)
+    include_generator(FunctionName, "humansketches_train", humansketches_train)
+    include_generator(FunctionName, "mnist_test", mnist_test)
+    include_generator(FunctionName, "mnist_train", mnist_train)
+    include_generator(FunctionName, "fashionmnist_test", fashionmnist_test)
+    include_generator(FunctionName, "fashionmnist_train", fashionmnist_train)
+    include_generator(FunctionName, "omniglot_test", omniglot_test)
+    include_generator(FunctionName, "omniglot_train", omniglot_train)
+    include_generator(FunctionName, "omniglot_small1", omniglot_small1)
+    include_generator(FunctionName, "omniglot_small2", omniglot_small2)
     include_generator(FunctionName, "census", census)
     include_generator(FunctionName, "covtype", covtype)
     include_generator(FunctionName, "kddcup", kddcup)

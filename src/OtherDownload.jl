@@ -85,60 +85,123 @@ function humansketches(idxs = 1:20_000)
 end
 
 """
-mnist dataset tensor
+mnist_train dataset tensor
 ========================
-mnist([idxs])
-Return a 3-tensor A[image number, vertical pixel position, horizontal pixel
-position], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the training images from mnist. `idxs` is an
-optional list specifying which sketch images to load. The images number from
-1:60_000.
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the training images from mnist.
 """
-function mnist(idxs = 1:60_000)
-    @boundscheck begin
-        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("mnist", idxs))
-    end
-    mnist_path = joinpath(download_cache, "mnist")
-    train_x = MNIST(:train, dir=mnist_path, Tx=UInt8).features
-    return permutedims(train_x[:,:,idxs], [3,1,2])
+function mnist_train()
+    dir = joinpath(download_cache, "mnist")
+    MNIST(:train, dir=dir, Tx=UInt8).features
 end
 
 """
-emnist dataset tensor
+fashionmnist_train dataset tensor
 ========================
-emnist([idxs])
-Return a 3-tensor A[image number, vertical pixel position, horizontal pixel
-position], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the training images from mnist. `idxs` is an
-optional list specifying which sketch images to load. The images number from
-1:60_000.
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the train split from fashionmnist.
 """
-function emnist(idxs = 1:60_000)
-    @boundscheck begin
-        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("emnist", idxs))
-    end
-    mnist_path = joinpath(download_cache, "emnist")
-    train_x = EMNIST(:train, dir=mnist_path, Tx=UInt8).features
-    return permutedims(train_x[:,:,idxs], [3,1,2])
+function fashionmnist_train()
+    dir = joinpath(download_cache, "fashionmnist")
+    FashionMNIST(:train, dir=dir, Tx=UInt8).features
 end
 
 """
-fashion mnist dataset tensor
+emnist_train dataset tensor
 ========================
-fashionmnist([idxs])
-Return a 3-tensor A[image number, vertical pixel position, horizontal pixel
-position], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the training images from mnist-fasion. `idxs` is
-an optional list specifying which sketch images to load. The images number from
-1:60_000.
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the train split from emnist.
 """
-function fashionmnist(idxs = 1:60_000)
-    @boundscheck begin
-        extrema(idxs) ⊆ 1:60_000 || throw(BoundsError("fashionmnist", idxs))
-    end
-    mnist_path = joinpath(download_cache, "fashion_mnist")
-    train_x = FashionMNIST(:train, dir=mnist_path, Tx=UInt8).features
-    return permutedims(train_x[:,:,idxs], [3,1,2])
+function emnist_train()
+    dir = joinpath(download_cache, "emnist_train")
+    EMNIST(:train, dir=dir, Tx=UInt8).features
+end
+
+"""
+omniglot_train dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the train split from omniglot.
+"""
+function omniglot_train()
+    dir = joinpath(download_cache, "omniglot")
+    Omniglot(:t, dir=dir, Tx=UInt8).features
+end
+
+"""
+mnist_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the training images from mnist.
+"""
+function mnist_test()
+    dir = joinpath(download_cache, "mnist")
+    MNIST(:test, dir=dir, Tx=UInt8).features
+end
+
+"""
+fashionmnist_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the test split from fashionmnist.
+"""
+function fashionmnist_test()
+    dir = joinpath(download_cache, "fashionmnist")
+    FashionMNIST(:test, dir=dir, Tx=UInt8).features
+end
+
+"""
+emnist_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the test split from emnist.
+"""
+function emnist_test()
+    dir = joinpath(download_cache, "emnist_test")
+    EMNIST(:test, dir=dir, Tx=UInt8).features
+end
+
+"""
+omniglot_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the test split from omniglot.
+"""
+function omniglot_test()
+    dir = joinpath(download_cache, "omniglot")
+    Omniglot(:test, dir=dir, Tx=UInt8).features
+end
+
+"""
+omniglot_small1 dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the small1 split from omniglot.
+"""
+function omniglot_small1()
+    dir = joinpath(download_cache, "omniglot")
+    Omniglot(:small1, dir=dir, Tx=UInt8).features
+end
+
+"""
+omniglot_small2 dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the small2 split from omniglot.
+"""
+function omniglot_small2()
+    dir = joinpath(download_cache, "omniglot")
+    Omniglot(:small2, dir=dir, Tx=UInt8).features
 end
 
 """
