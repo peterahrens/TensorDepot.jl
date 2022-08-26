@@ -85,11 +85,35 @@ function humansketches(idxs = 1:20_000)
 end
 
 """
+cifar10_test dataset tensor
+========================
+Return a 4-tensor A[vertical pixel position, horizontal pixel position, channel,
+image number], measured from image upper left. Pixel values are stored using
+8-bit grayscale values. This returns the test split from cifar10.
+"""
+function cifar10_test()
+    dir = joinpath(download_cache, "cifar10")
+    CIFAR10(:test, dir=dir, Tx=UInt8).features
+end
+
+"""
+cifar10_train dataset tensor
+========================
+Return a 4-tensor A[vertical pixel position, horizontal pixel position, channel,
+image number], measured from image upper left. Pixel values are stored using
+8-bit grayscale values. This returns the train split from cifar10.
+"""
+function cifar10_train()
+    dir = joinpath(download_cache, "cifar10")
+    CIFAR10(:train, dir=dir, Tx=UInt8).features
+end
+
+"""
 mnist_train dataset tensor
 ========================
 Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
 number], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the training images from mnist.
+grayscale values. This returns the train split from mnist.
 """
 function mnist_train()
     dir = joinpath(download_cache, "mnist")
@@ -117,7 +141,7 @@ grayscale values. This returns the train split from omniglot.
 """
 function omniglot_train()
     dir = joinpath(download_cache, "omniglot")
-    Omniglot(:train, dir=dir, Tx=UInt8).features
+    Omniglot(:t, dir=dir, Tx=UInt8).features
 end
 
 """
@@ -125,7 +149,7 @@ mnist_test dataset tensor
 ========================
 Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
 number], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the training images from mnist.
+grayscale values. This returns the test split from mnist.
 """
 function mnist_test()
     dir = joinpath(download_cache, "mnist")
