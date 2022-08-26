@@ -189,7 +189,7 @@ grayscale values. This returns the test split from the digits extension of emnis
 """
 function emnist_digits_test()
     dir = joinpath(download_cache, "emnist")
-    EMNIST(:test, dir=dir, Tx=UInt8).Digits.features
+    EMNIST(:digits, :test, dir=dir, Tx=UInt8).features
 end
 
 """
@@ -201,7 +201,7 @@ grayscale values. This returns the train split from the digits extentsion of mni
 """
 function emnist_digits_train()
     dir = joinpath(download_cache, "emnist")
-    EMNIST(:train, dir=dir, Tx=UInt8).Digits.features
+    EMNIST(:digits, :train, dir=dir, Tx=UInt8).features
 end
 
 """
@@ -213,7 +213,7 @@ grayscale values. This returns the test split from the letters extension of emni
 """
 function emnist_letters_test()
     dir = joinpath(download_cache, "emnist")
-    EMNIST(:test, dir=dir, Tx=UInt8).Letters.features
+    EMNIST(:letters, dir=dir, Tx=UInt8).features
 end
 
 """
@@ -225,7 +225,7 @@ grayscale values. This returns the train split from the letters extentsion of mn
 """
 function emnist_letters_train()
     dir = joinpath(download_cache, "emnist")
-    EMNIST(:train, dir=dir, Tx=UInt8).Letters.features
+    EMNIST(:letters, :train, dir=dir, Tx=UInt8).features
 end
 
 """
@@ -237,7 +237,7 @@ grayscale values. This returns the test split from the complete emnist.
 """
 function emnist_test()
     dir = joinpath(download_cache, "emnist")
-    EMNIST(:test, dir=dir, Tx=UInt8).ByClass.features
+    EMNIST(:byclass, :test, dir=dir, Tx=UInt8).features
 end
 
 """
@@ -249,7 +249,7 @@ grayscale values. This returns the train split from complete emnist.
 """
 function emnist_train()
     dir = joinpath(download_cache, "emnist")
-    EMNIST(:train, dir=dir, Tx=UInt8).ByClass.features
+    EMNIST(:byclass, :train, dir=dir, Tx=UInt8).features
 end
 
 """
