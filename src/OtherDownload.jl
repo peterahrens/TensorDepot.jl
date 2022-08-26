@@ -109,18 +109,6 @@ function fashionmnist_train()
 end
 
 """
-emnist_train dataset tensor
-========================
-Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
-number], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the train split from emnist.
-"""
-function emnist_train()
-    dir = joinpath(download_cache, "emnist_train")
-    EMNIST(:train, dir=dir, Tx=UInt8).features
-end
-
-"""
 omniglot_train dataset tensor
 ========================
 Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
@@ -157,18 +145,6 @@ function fashionmnist_test()
 end
 
 """
-emnist_test dataset tensor
-========================
-Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
-number], measured from image upper left. Pixel values are stored using 8-bit
-grayscale values. This returns the test split from emnist.
-"""
-function emnist_test()
-    dir = joinpath(download_cache, "emnist_test")
-    EMNIST(:test, dir=dir, Tx=UInt8).features
-end
-
-"""
 omniglot_test dataset tensor
 ========================
 Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
@@ -202,6 +178,78 @@ grayscale values. This returns the small2 split from omniglot.
 function omniglot_small2()
     dir = joinpath(download_cache, "omniglot")
     Omniglot(:small2, dir=dir, Tx=UInt8).features
+end
+
+"""
+emnist_digits_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the test split from the digits extension of emnist.
+"""
+function emnist_digits_test()
+    dir = joinpath(download_cache, "emnist")
+    EMNIST(:test, dir=dir, Tx=UInt8).digits.features
+end
+
+"""
+emnist_digits_train dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the train split from the digits extentsion of mnist.
+"""
+function emnist_digits_train()
+    dir = joinpath(download_cache, "emnist")
+    EMNIST(:train, dir=dir, Tx=UInt8).digits.features
+end
+
+"""
+emnist_letters_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the test split from the letters extension of emnist.
+"""
+function emnist_letters_test()
+    dir = joinpath(download_cache, "emnist")
+    EMNIST(:test, dir=dir, Tx=UInt8).letters.features
+end
+
+"""
+emnist_letters_train dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the train split from the letters extentsion of mnist.
+"""
+function emnist_letters_train()
+    dir = joinpath(download_cache, "emnist")
+    EMNIST(:train, dir=dir, Tx=UInt8).letters.features
+end
+
+"""
+emnist_test dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the test split from the complete emnist.
+"""
+function emnist_test()
+    dir = joinpath(download_cache, "emnist")
+    EMNIST(:test, dir=dir, Tx=UInt8).byclass.features
+end
+
+"""
+emnist_train dataset tensor
+========================
+Return a 3-tensor A[vertical pixel position, horizontal pixel position, image
+number], measured from image upper left. Pixel values are stored using 8-bit
+grayscale values. This returns the train split from complete emnist.
+"""
+function emnist_train()
+    dir = joinpath(download_cache, "emnist")
+    EMNIST(:train, dir=dir, Tx=UInt8).byclass.features
 end
 
 """
