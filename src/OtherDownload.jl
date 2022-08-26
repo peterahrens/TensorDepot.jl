@@ -141,7 +141,7 @@ grayscale values. This returns the train split from omniglot.
 """
 function omniglot_train()
     dir = joinpath(download_cache, "omniglot")
-    Omniglot(:t, dir=dir, Tx=UInt8).features
+    Omniglot(:train, dir=dir, Tx=UInt8).features
 end
 
 """
